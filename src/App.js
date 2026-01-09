@@ -1,9 +1,10 @@
-import "./App.css";
+import Body from "./components.js/Body";
+import Header from "./components.js/Header";
 
 function App() {
   return (
-    <div className="text-3xl text-green-900">
-      <h1>Hey Everyone!!!</h1>
+    <div>
+      <Body />
     </div>
   );
 }
