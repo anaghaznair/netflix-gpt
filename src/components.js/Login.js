@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import Header from "./Header";
 import validateInputField from "../utils.js/validate";
+import { netflixLogo, profileLogo } from "../utils.js/constants";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -24,7 +25,7 @@ const Login = () => {
       email.current.value,
       password.current.value,
       name.current?.value || "",
-      !isSignedIn
+      !isSignedIn,
     );
     setErrorMessage(message);
 
@@ -36,29 +37,28 @@ const Login = () => {
       createUserWithEmailAndPassword(
         auth,
         email.current.value,
-        password.current.value
+        password.current.value,
       )
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
           console.log(user);
           updateProfile(user, {
-            displayName: name.current.user,
-            photoURL:
-              "https://s3-alpha.figma.com/hub/file/1241495062/00b11c6b-a85f-4aee-9965-d6f3828c7830-cover.png",
+            displayName: name.current.value,
+            photoURL: profileLogo,
           })
             .then(() => {
               // Profile updated!
               // ...
+              const currentUser = auth.currentUser;
               dispatch(
                 addUser({
-                  uid: user.uid,
-                  email: user.email,
-                  displayName: name.current.value,
-                  photoURL: user.photoURL,
-                })
+                  uid: currentUser.uid,
+                  email: currentUser.email,
+                  displayName: currentUser.displayName,
+                  photoURL: currentUser.photoURL,
+                }),
               );
-              navigate("/browse");
             })
             .catch((error) => {
               // An error occurred
@@ -78,13 +78,13 @@ const Login = () => {
       signInWithEmailAndPassword(
         auth,
         email.current.value,
-        password.current.value
+        password.current.value,
       )
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
           console.log(user);
-          navigate("/browse");
+
           // ...
         })
         .catch((error) => {
@@ -103,10 +103,7 @@ const Login = () => {
     <div className="relative">
       <Header />
       <div>
-        <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/d13e2d55-5cdd-48c0-a55b-4b292d0b9889/web/IN-en-20251229-TRIFECTA-perspective_d7edcd70-4cfd-441c-858c-c5e400ed6c2b_large.jpg"
-          alt="BG-IMAGE"
-        />
+        <img src={netflixLogo} alt="BG-IMAGE" />
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.8)_0%,rgba(0,0,0,0.4)_50%,rgba(0,0,0,0.9)_100%)]"></div>
       {errorMessage === "auth/invalid-credential" && (
